@@ -1,0 +1,22 @@
+C:\Users\RexyLiu\Desktop\TestForm\bin\Debug\TestForm.exe.config
+C:\Users\RexyLiu\Desktop\TestForm\bin\Debug\TestForm.exe
+C:\Users\RexyLiu\Desktop\TestForm\bin\Debug\TestForm.pdb
+C:\Users\RexyLiu\Desktop\TestForm\bin\Debug\Newtonsoft.Json.dll
+C:\Users\RexyLiu\Desktop\TestForm\bin\Debug\Newtonsoft.Json.xml
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.csprojResolveAssemblyReference.cache
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.Form1.resources
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.Properties.Resources.resources
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.csproj.GenerateResource.Cache
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.exe
+C:\Users\RexyLiu\Desktop\TestForm\obj\Debug\TestForm.pdb
+C:\Users\RexyLiu\Desktop\TestForm - 複製\bin\Debug\TestForm.exe.config
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.exe
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.pdb
+C:\Users\RexyLiu\Desktop\TestForm - 複製\bin\Debug\TestForm.exe
+C:\Users\RexyLiu\Desktop\TestForm - 複製\bin\Debug\TestForm.pdb
+C:\Users\RexyLiu\Desktop\TestForm - 複製\bin\Debug\Newtonsoft.Json.dll
+C:\Users\RexyLiu\Desktop\TestForm - 複製\bin\Debug\Newtonsoft.Json.xml
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.csprojResolveAssemblyReference.cache
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.Form1.resources
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.Properties.Resources.resources
+C:\Users\RexyLiu\Desktop\TestForm - 複製\obj\Debug\TestForm.csproj.GenerateResource.Cache

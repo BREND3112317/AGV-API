@@ -1,0 +1,15 @@
+{
+    "require": {
+        "symfony/http-client": "^5.1",
+        "symfony/http-foundation": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "BREND\\AGV\\": "vendor/AGV/src",
+			"BREND\\Constants\\": "vendor/AGV/supports/Constants/"
+        },
+		"files": [
+			"vendor/AGV/supports/Constants/StatusCode.php"
+		]
+    }
+}
