@@ -12,6 +12,9 @@ class ComposerStaticInitd32d7d659e0647e154f12d8da84c40c9
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '826eba505eb5f17fe41d46e2740ae653' => __DIR__ . '/..' . '/AGV/supports/Constants/StatusCode.php',
+        'ed4d341e3b6e9825a8d7fce8602ffe50' => __DIR__ . '/..' . '/AGV/supports/Handler/Error.php',
+        'e822de44f90c0e6885ce22936f9c9725' => __DIR__ . '/..' . '/AGV/supports/Handler/Exception.php',
+        '4f79091dd31870d89dc0bfc948c46633' => __DIR__ . '/..' . '/AGV/supports/Handler/Function.php',
     );
 
     public static $prefixLengthsPsr4 = array (

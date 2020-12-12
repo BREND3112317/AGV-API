@@ -23,7 +23,15 @@ class AGV_response{
     }
 
     public function getBattery(){
-        return $this->config['Battery'];
+        /*
+            '電池電量'
+        */
+        if(isset($this->config['Battery'])){
+            $data = $this->config['Battery'];
+            $this->config = array();
+            return $this->config['Battery'] = $data;
+        }
+        throw AGVException("Config['Battery'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getPos(){
@@ -32,7 +40,12 @@ class AGV_response{
             'Y' => 'AGV相對座標y'
             'A' => 'AGV相對座標a'
         */
-        return $this->config['Pos'];
+        if(isset($this->config['Pos'])){
+            $data = $this->config['Pos'];
+            $this->config = array();
+            return $this->config['Pos'] = $data;
+        }
+        throw AGVException("Config['Pos'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getStatus(){
@@ -52,7 +65,12 @@ class AGV_response{
             IsReady         Bool    AGV是否準備中
             IsMoving        Bool    AGV是否移動中
         */
-        return $this->config['Status'];
+        if(isset($this->config['Status'])){
+            $data = $this->config['Status'];
+            $this->config = array();
+            return $this->config['Status'] = $data;
+        }
+        throw AGVException("Config['Status'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getAttitude(){
@@ -62,7 +80,12 @@ class AGV_response{
             Yaw     Double  二維碼旋轉角度
             Code    String  二維碼內容
         */
-        return $this->config['Attitude'];
+        if(isset($this->config['Attitude'])){
+            $data = $this->config['Attitude'];
+            $this->config = array();
+            return $this->config['Attitude'] = $data;
+        }
+        throw AGVException("Config['Attitude'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getAgvLogIndex(){
@@ -72,7 +95,12 @@ class AGV_response{
             RunIdx      Int     目前批次命令的行數
             ErrorIdx    Int     異常的錯誤碼
         */
-        return $this->config['AgvLogIndex'];
+        if(isset($this->config['AgvLogIndex'])){
+            $data = $this->config['AgvLogIndex'];
+            $this->config = array();
+            return $this->config['AgvLogIndex'] = $data;
+        }
+        throw AGVException("Config['AgvLogIndex'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getRunPara(){
@@ -82,7 +110,12 @@ class AGV_response{
             Deceleration Int 減速度
             Jerk Int 加加速/減減速
         */
-        return $this->config['RunPara'];
+        if(isset($this->config['RunPara'])){
+            $data = $this->config['RunPara'];
+            $this->config = array();
+            return $this->config['RunPara'] = $data;
+        }
+        throw AGVException("Config['RunPara'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 
     public function getAgvScript(){
@@ -91,6 +124,11 @@ class AGV_response{
             Parameter Int 指令參數
             Code Int 指令碼
         */
-        return $this->config['AgvScript'];
+        if(isset($this->config['AgvScript'])){
+            $data = $this->config['AgvScript'];
+            $this->config = array();
+            return $this->config['AgvScript'] = $data;
+        }
+        throw AGVException("Config['AgvScript'] is unSet", STATUS::JSON_NO_REQUIRED_DATA);
     }
 }

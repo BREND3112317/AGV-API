@@ -2,6 +2,7 @@
 
 namespace BREND\AGV\Models;
 
+use BREND\Constants\STATUS;
 use Symfony\Component\HttpClient\HttpClient;
 
 class AGV_request{
@@ -27,7 +28,12 @@ class AGV_request{
             ]
         );
 
+        //$responseData[]
+
         $httpCode = $response->getStatusCode();
+        if($httpCode != 200){
+            throw Exception("httpCode: " . $httpCode, STATUS::RESPONSE_ERROR);
+        }
         $httpContentType = $response->getHeaders()['content-type'][0];
         $httpContent = json_decode($response->getContent(), true);
         return $httpContent;

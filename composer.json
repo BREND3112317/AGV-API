@@ -5,11 +5,14 @@
     },
     "autoload": {
         "psr-4": {
-            "BREND\\AGV\\": "vendor/AGV/src",
+            "BREND\\AGV\\": "vendor/AGV/src/",
 			"BREND\\Constants\\": "vendor/AGV/supports/Constants/"
         },
 		"files": [
-			"vendor/AGV/supports/Constants/StatusCode.php"
+            "vendor/AGV/supports/Constants/StatusCode.php",
+            "vendor/AGV/supports/Handler/Error.php",
+            "vendor/AGV/supports/Handler/Exception.php",
+            "vendor/AGV/supports/Handler/Function.php"
 		]
     }
 }

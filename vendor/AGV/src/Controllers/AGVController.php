@@ -2,73 +2,87 @@
 
 namespace BREND\AGV\Controllers;
 
+use BREND\Constants\STATUS;
+use BREND\Constants\AGVSTATUS;
+use BREND\Constants\API_Code;
 use BREND\AGV\Models\AGV_request;
 use BREND\AGV\Models\AGV_response;
+use BREND\AGV\Models\AGV;
 use BREND\AGV\Exceptions\AGVException;
 
 class AGVController{
     protected $api_url;
     protected $AGV_name;
-    protected $_Status = null;
 
     public function __construct($name, $url = null){
         $this->AGV_name = $name;
         $this->api_url = ($url == null ? AGV_request::$url : $url);
     }
 
-    public function getStatus(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "500", array(), $this->api_url);
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
-    }
-
-    public function checkError(){
-        if(($statusCode = $this->_Status->getStatusCode()) !== 0){
-            throw AGVException("Status Error Code: " . $statusCode);
+    public function Getaway($code, $param = array()){
+        $AGV = new AGV($this->AGV_name, $this->api_url);
+        switch($code){
+            case API_Code::DIRECTSTOP:
+                return $AGV->DirectSTOP();
+                break;
+            case API_Code::SCRIPTOVER:
+                return $AGV->ScriptOVER();
+                break;
+            case API_Code::SCRIPTContinue:
+                return $AGV->ScriptContinue();
+                break;
+            case API_Code::SCRIPTSTOP:
+                return $AGV->ScriptSTOP();
+                break;
+            case API_Code::RUN1000:
+                return $AGV->move(1000);
+                break;
+            case API_Code::TURNLEFT:
+                return $AGV->spinLeft(90);
+                break;
+            case API_Code::TURNRIGHT:
+                return $AGV->spinRight(90);
+                break;
+            case API_Code::SHELFUP:
+                return $AGV->shelfup();
+                break;
+            case API_Code::SHELFDOWN:
+                return $AGV->shelfdown();
+                break;
+            // case API_Code::TURNRIGHT:
+            //     return $AGV->spinRight(90);
+            //     break;
+            // case API_Code::TURNRIGHT:
+            //     return $AGV->spinRight(90);
+            //     break;
         }
-        return false;
     }
 
-    public function getBattery(){
-        $this->getStatus();
-        return $this->_Status->getBattery();
+    public function getData($code = API_Code::ALL){
+        $AGV = new AGV($this->AGV_name, $this->api_url);
+        switch($code){
+            case API_Code::ALL:
+                return $AGV->getData()->toArray();
+                break;
+            case API_Code::BATTERY:
+                return $AGV->getBattery()->toArray();
+                break;
+            case API_Code::POS:
+                return $AGV->getMapPosition()->toArray();
+                break;
+            case API_Code::IsLeftUp:
+                return $AGV->checkIsLeftUp()->toArray();
+                break;
+            case API_Code::POS:
+                return $AGV->getMapPosition()->toArray();
+                break; 
+        }
+        
     }
 
-    public function getMapPosition(){
-        $this->getStatus();
-        return $this->_Status->getAttitude();
-        return ['Code' => $httpResponse['config']['Attitude']['Code'], 'Yaw' => $httpResponse['config']['Attitude']['Yaw']];
-    }
-
-    public function getNowPosition(){
-        $this->getStatus();
-        return [
-            'X' => $httpResponse['config']['Pos']['X'], 
-            'Y' => $httpResponse['config']['Pos']['Y'],
-            'A' => $httpResponse['config']['Pos']['A']
-        ];
-    }
-
-    public function move($gap){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30112", array($gap), $this->api_url);
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
-    }
-
-    public function rise(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30218", array(), $this->api_url);
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
-    }
-
-    public function fall(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30219", array(), $this->api_url);
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
+    public function GoCharge(){
+        $AGV = new AGV($this->AGV_name, $this->api_url);
+        //if($AGV->getData()->)
     }
 
     private function absAngle($angle){
@@ -77,40 +91,5 @@ class AGVController{
     }
     public function spin($degree, $lockingDisc = true){ // 旋轉 : lockingDisc鎖定圓盤不動
         throw Exception(__FUNCTION__ . "is unactive.");
-    }
-    public function spinLeft($degree, $lockingDisc = true){
-        switch($this->absAngle($spin)/90){
-            case 1:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30210" : "30110", array(), $this->api_url);
-                break;
-            case 2:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30211" : "30111", array(), $this->api_url);
-                break;
-            case 3:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30211" : "30111", array(), $this->api_url);
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30210" : "30110", array(), $this->api_url);
-                break;
-        }
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
-    }
-
-    public function spinRight($degree, $lockingDisc = true){
-        switch($this->absAngle($spin)/90){
-            case 1:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30208" : "30108", array(), $this->api_url);
-                break;
-            case 2:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30209" : "30109", array(), $this->api_url);
-                break;
-            case 3:
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30209" : "30109", array(), $this->api_url);
-                $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30208" : "30108", array(), $this->api_url);
-                break;
-        }
-        $this->_Status = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Status;
     }
 }

@@ -20,7 +20,7 @@ $AGV = new AGVController($Data['Name']);
 
 $jsonOut = [
     'code' => STATUS::SUCCESS, 
-    'data' => $AGV->getData($Data['Cmd'])
+    'data' => $AGV->Getaway($Data['Cmd'])
 ];
 
 $response = new Response();

@@ -11,4 +11,7 @@ return array(
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     '0d59ee240a4cd96ddbb4ff164fccea4d' => $vendorDir . '/symfony/polyfill-php73/bootstrap.php',
     '826eba505eb5f17fe41d46e2740ae653' => $vendorDir . '/AGV/supports/Constants/StatusCode.php',
+    'ed4d341e3b6e9825a8d7fce8602ffe50' => $vendorDir . '/AGV/supports/Handler/Error.php',
+    'e822de44f90c0e6885ce22936f9c9725' => $vendorDir . '/AGV/supports/Handler/Exception.php',
+    '4f79091dd31870d89dc0bfc948c46633' => $vendorDir . '/AGV/supports/Handler/Function.php',
 );
