@@ -45,6 +45,12 @@
 <body>
     <div class="container">
         <?php
+        function microtime_ufloat()
+        {
+            list($usec) = explode(" ", microtime());
+            return ((float)$usec);
+        }
+        $time_start = microtime_ufloat();
 
         set_time_limit(1);
 
@@ -313,7 +319,10 @@
 
         $searchPah = new AStar($_map);
         $searchPah->RunAndSaveImage(4, 2, 1, 4);
-        var_dump(realpath_cache_size());
+        //var_dump(realpath_cache_size());
+        $time_end = microtime_ufloat();
+        $time = $time_end - $time_start;
+        echo "<br/><h2>Do php in $time seconds<h2>\n";
         ?>
     </div>
 </body>
