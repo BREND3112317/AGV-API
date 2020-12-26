@@ -17,4 +17,7 @@ class API_Code{
     const TURNRIGHT         = -12;
     const SHELFUP           = -13;
     const SHELFDOWN         = -14;
+    const TURNBACK          = -15;
+    const PLUGIN            = -16;
+    const PLUGOUT           = -17;
 }

@@ -15,6 +15,7 @@ class ComposerStaticInitd32d7d659e0647e154f12d8da84c40c9
         'ed4d341e3b6e9825a8d7fce8602ffe50' => __DIR__ . '/..' . '/AGV/supports/Handler/Error.php',
         'e822de44f90c0e6885ce22936f9c9725' => __DIR__ . '/..' . '/AGV/supports/Handler/Exception.php',
         '4f79091dd31870d89dc0bfc948c46633' => __DIR__ . '/..' . '/AGV/supports/Handler/Function.php',
+        'e5854ee7f4285d1ea0251e9f2af30eee' => __DIR__ . '/..' . '/AGV/supports/Handler/Json.php',
     );
 
     public static $prefixLengthsPsr4 = array (

@@ -18,7 +18,7 @@ set_exception_handler(function(Throwable $e){
     die;
     exit();
 
-    $jsonOut['code'] = STATUS::UNKNOWN_ERROR;
+    
     
     // $errorStatus['statusCode'] = $e->getCode();
     // $errorStatus['title'] = $e->getMessage();
@@ -32,6 +32,7 @@ set_exception_handler(function(Throwable $e){
     <h3>Call Stack</h3>
     <pre>{$e->getTraceAsString()}<pre>
     HTML;
+    $jsonOut['code'] = STATUS::UNKNOWN_ERROR;
     $jsonOut['data'] = base64url_encode($errorStatus);
     $response = new Response();
     $response->setContent(json_encode($jsonOut));

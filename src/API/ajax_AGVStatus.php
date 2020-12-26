@@ -14,8 +14,8 @@ $Data = json_decode($request->getContent(), true);
 // var_dump($Data);
 // exit();
 
-// $AGV = new AGVController($Data['Name'], "http://192.168.101.234:50100/AGV/SendAgvCmd");
-$AGV = new AGVController($Data['Name']);
+$AGV = new AGVController($Data['Name'], "http://192.168.101.234:50100/AGV/SendAgvCmd");
+// $AGV = new AGVController($Data['Name']);
 
 
 $jsonOut = [

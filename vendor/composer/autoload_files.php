@@ -14,4 +14,5 @@ return array(
     'ed4d341e3b6e9825a8d7fce8602ffe50' => $vendorDir . '/AGV/supports/Handler/Error.php',
     'e822de44f90c0e6885ce22936f9c9725' => $vendorDir . '/AGV/supports/Handler/Exception.php',
     '4f79091dd31870d89dc0bfc948c46633' => $vendorDir . '/AGV/supports/Handler/Function.php',
+    'e5854ee7f4285d1ea0251e9f2af30eee' => $vendorDir . '/AGV/supports/Handler/Json.php',
 );

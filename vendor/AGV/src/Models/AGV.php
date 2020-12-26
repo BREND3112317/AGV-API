@@ -39,12 +39,11 @@ class AGV{
         */
         $data = $this->getData()->toArray();
 
-        $prepareData['StatusCode'] = $data['StatusCode'];
-        $prepareData['Config']['Battery'] = $data['Config']['Battery'];
-        $prepareData['Config']['AgvLogIndex']['IsProgress'] = $data['Config']['AgvLogIndex']['IsProgress'];
-        $prepareData['Config']['Attitude']['Code'] = $data['Config']['Attitude']['Code'];
-        $prepareData['Config']['Attitude']['Yaw'] = $data['Config']['Attitude']['Yaw'];
-        $prepareData['Config']['Shelves']['Yaw'] = $data['Config']['Shelves']['Yaw'];
+        $prepareData['Battery'] = $data['Config']['Battery'];
+        $prepareData['AgvLogIndex']['IsProgress'] = $data['Config']['AgvLogIndex']['IsProgress'];
+        $prepareData['Attitude']['Code'] = $data['Config']['Attitude']['Code'];
+        $prepareData['Attitude']['Yaw'] = $data['Config']['Attitude']['Yaw'];
+        $prepareData['Shelves']['Yaw'] = $data['Config']['Shelves']['Yaw'];
         return $prepareData;
     }
 
@@ -96,29 +95,36 @@ class AGV{
         // return ['StatusCode' => $this->_Data->getStatusCode(), 'RunPara' => $this->_Data->getRunPara()];
     }
 
+    public function Script($param = array()){
+        $httpResponse = AGV_request::POST($this->AGV_name, "30121", $param, $this->api_url);
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
+    }
+
     public function DirectSTOP(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30310", array($gap), $this->api_url);
+        $httpResponse = AGV_request::POST($this->AGV_name, "30310", array(), $this->api_url);
         $this->_Data = new AGV_response($httpResponse);
         $this->checkError();
         return $this->_Data;
     }
 
     public function ScriptOVER(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30314", array($gap), $this->api_url);
+        $httpResponse = AGV_request::POST($this->AGV_name, "30314", array(), $this->api_url);
         $this->_Data = new AGV_response($httpResponse);
         $this->checkError();
         return $this->_Data;
     }
 
     public function ScriptContinue(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30313", array($gap), $this->api_url);
+        $httpResponse = AGV_request::POST($this->AGV_name, "30313", array(), $this->api_url);
         $this->_Data = new AGV_response($httpResponse);
         $this->checkError();
         return $this->_Data;
     }
 
     public function ScriptSTOP(){
-        $httpResponse = AGV_request::POST($this->AGV_name, "30312", array($gap), $this->api_url);
+        $httpResponse = AGV_request::POST($this->AGV_name, "30312", array(), $this->api_url);
         $this->_Data = new AGV_response($httpResponse);
         $this->checkError();
         return $this->_Data;
@@ -151,10 +157,32 @@ class AGV{
         return $this->_Data;
     }
 
-    private function absAngle($angle){
-        while($angle<0)$angle+=360;
-        return $angle%360;
+    public function PlugIn($gap=700, $enforce = false){
+        // if($this->checkPosition("060050")){
+        //     throw new AGVException("Position Code is not in the default Code", UNKNOWN_ERROR);
+        // }
+        // if($this->checkYaw(90)==false){
+        //     throw new AGVException("Position Yaw is not in the default Yaw", UNKNOWN_ERROR);
+        // }
+        // if($this->checkIsChargeing()){
+        //     throw new AGVException("isChargeing", UNKNOWN_ERROR);
+        // }
+        $httpResponse = AGV_request::POST($this->AGV_name, "30230", array($gap), $this->api_url);
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
     }
+    
+    public function PlugOut($gap=700, $enforce = false){
+        // if($this->checkIsChargeing() == false){
+        //     throw new AGVException("AGV is not Chargeing", UNKNOWN_ERROR);
+        // }
+        $httpResponse = AGV_request::POST($this->AGV_name, "30231", array($gap), $this->api_url);
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
+    }
+
     public function spin($degree, $lockingDisc = true){ // 旋轉 : lockingDisc鎖定圓盤不動
         throw Exception(__FUNCTION__ . "is unactive.");
     }
@@ -192,6 +220,29 @@ class AGV{
         $this->_Data = new AGV_response($httpResponse);
         $this->checkError();
         return $this->_Data;
+    }
+
+    private function absAngle($angle){
+        while($angle<0)$angle+=360;
+        $angle = round($angle/90)*90;
+        return $angle%360;
+    }
+    public function checkYaw($yaw){
+        $this->getData();
+        $Attitude = $this->_Data->getAttitude();
+        return $yaw == $this->absAngle($Attitude['Yaw']);
+    }
+
+    public function checkPosition($code){
+        $this->getData();
+        $Attitude = $this->_Data->getAttitude();
+        return $code == $Attitude['Code'];
+    }
+
+    public function checkIsChargeing(){
+        $this->getData();
+        $status = $this->_Data->getStatus();
+        return $status['IsChargeing'];
     }
 
     public function checkIsLeftUp(){

@@ -12,7 +12,8 @@
             "vendor/AGV/supports/Constants/StatusCode.php",
             "vendor/AGV/supports/Handler/Error.php",
             "vendor/AGV/supports/Handler/Exception.php",
-            "vendor/AGV/supports/Handler/Function.php"
+            "vendor/AGV/supports/Handler/Function.php",
+			"vendor/AGV/supports/Handler/Json.php"
 		]
     }
 }
