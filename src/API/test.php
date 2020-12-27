@@ -1,26 +1,25 @@
 <?php
 $time = -microtime(true);
-function absAngle($angle){
-    while($angle<0)$angle+=360;
-    $angle = round($angle/90)*90;
-    return $angle%360;
-}
-function compareDFSYaw($yaw){
-    switch($yaw){
-        case 0:
-            return 1;
-            break;
-        case 1:
-            return 0;
-            break;
-        case 2:
-            return 3;
-            break;
-        case 3:
-            return 2;
-            break;
-    }
-}
+require_once(__DIR__ . "/../../vendor/autoload.php");
+
+use BREND\Constants\STATUS;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use BREND\AGV\Models\AGV_request;
+use BREND\AGV\Models\AGV_response;
+use BREND\AGV\Controllers\AGVController;
+use BREND\AGV\Algorithms\AGV_DFS;
+use BREND\AGV\Algorithms\point;
+
+$AGV = new AGVController("ITRI_3-1");
+$Data = $AGV->getData(1);
+
+$dfs = new AGV_DFS();
+$dfs->setStartPoint($Data['Config']['Attitude']['Code'], $Data['Config']['Attitude']['Yaw']);
+$dfs->Run();
+$paths = $dfs->getAGVPreviewPath();
+var_dump($paths);
+
 $time += microtime(true);
 
 echo "<br/><h2>Do php in $time seconds<h2>\n";

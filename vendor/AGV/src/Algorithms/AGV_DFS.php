@@ -28,7 +28,7 @@ class point{
     }
 }
 
-class DFS{
+class AGV_DFS{
     public $charges = ['movestart' => 4.24, 'movecontinue' => 2.64, 'tra90' => 4.41, 'tra180' => 4.80];
 
     public $map = [ [-1,-2, 0, 0,-1,-1,-1],
@@ -119,7 +119,7 @@ class DFS{
     }
 
     public function Run(){
-        $this->map_index[$this->start->y][$this->start->x] = $this->start;
+        $this->map_index['0'.$this->start->y.'00'.$this->start->x.'0'] = $this->start;
 
         $this->ProcessPoint($this->start->x,    $this->start->y+1,  $this->start);
         $this->ProcessPoint($this->start->x-1,  $this->start->y,    $this->start);
@@ -132,7 +132,7 @@ class DFS{
         $newYaw = $this->calYaw($x, $y, $parent);
         $newCost = $parent->cost + $this->estimateCost($parent, $newYaw);
         
-        if(isset($this->map_index[$y][$x])==false || $this->map_index[$y][$x]->cost > $newCost){
+        if(isset($this->map_index['0'.$y.'00'.$x.'0'])==false || $this->map_index['0'.$y.'00'.$x.'0']->cost > $newCost){
             $p = new point($x, $y, $newYaw, $newCost, $parent);
             $p->setScript($parent->script);
             $cost_index = $parent->yaw - $newYaw;
@@ -159,7 +159,7 @@ class DFS{
                 }
                 
             }
-            $this->map_index[$y][$x] = $p;
+            $this->map_index['0'.$y.'00'.$x.'0'] = $p;
             //$this->ShowView();
             $this->ProcessPoint($p->x,      $p->y+1,    $p);
             $this->ProcessPoint($p->x-1,    $p->y,      $p);
@@ -174,36 +174,30 @@ class DFS{
         }
     }
 
-    public function getScript($p){
-        if(isset($this->map_index[$y][$x])){
-            return $this->map_index[$y][$x]->script;
+    public function getScript($code){
+        if(isset($this->map_index[$code])){
+            return $this->map_index[$code]->script;
         }
         return null;
     }
 
-    public function getPath($x, $y){
-        if(isset($this->map_index[$y][$x])){
-            return $this->map_index[$y][$x];
+    public function getPath($code){
+        if(isset($this->map_index[$code])){
+            return $this->map_index[$code];
         }
         return null;
     }
 
     public function getAGVPreviewPath(){
         $paths = array();
-        foreach($this->map_index as $y){
-            foreach($y as $x){
-                // echo $x;
-                $_y = $x->y;
-                $_x = $x->x;
-                $path = array();
-                while($x != null){
-                    //echo '(' . $x->x . ', ' . $x->y . ') -> ';
-                    array_push($path, '0'.$x->y.'00'.$x->x.'0');
-                    $x = $x->parent;
-                }
-                // echo '<br/>';
-                array_push($paths, ['0'.$_y.'00'.$_x.'0' => $path]);
+        foreach($this->map_index as $code => $p){
+            $path = array();
+            while($p != null){
+                //echo '(' . $x->x . ', ' . $x->y . ') -> ';
+                array_push($path, '0'.$p->y.'00'.$p->x.'0');
+                $p = $p->parent;
             }
+            array_push($paths, [$code => $path]);
         }
         return $paths;
     }

@@ -77,7 +77,8 @@
             }
         }
 
-        $AGV = new AGVController("ITRI_3-3", "http://192.168.101.234:50100/AGV/SendAgvCmd");
+        // $AGV = new AGVController("ITRI_3-3", "http://192.168.101.234:50100/AGV/SendAgvCmd");
+        $AGV = new AGVController("ITRI_3-3");
 
         $Data = $AGV->getData(1);
 
@@ -278,16 +279,10 @@
                 $cost = 0;
                 $index = 0;
                 $_p = $p;
-                
+                $this->RealPath($p);
                 while($_p!=null){
-                    // if(DEBUG){
-                    //     echo "====DEBUG-BUILDPATH====<br/>";
-                    //     var_dump($p);
-                    //     echo "<br/>====DEBUG-BUILDPATH====<br/>";
-                    // }
-                    echo '(' . $_p->x . ', ' . $_p->y . ', ' . $_p->yaw . ') -> ';
                     array_push($path, $_p);
-                    $cost += $_p->cost;
+                    $cost = $_p->cost > $cost ? $_p->cost : $cost;
                     $_p = $_p->parent;
                 }
                 echo "cost=$cost<br/>";
@@ -299,13 +294,18 @@
                 $this->ShowView($path);
             }
 
+            public function RealPath($p){
+                if($p == null)return ;
+                $this->RealPath($p->parent);
+                echo '(' . $p->x . ', ' . $p->y . ', ' . $p->yaw . ') -> ';
+            }
+
             public function ShowView($path = array(), $_map = null){
                 if($_map == null){
                     $_map = $this->map;
                 }
                 $index = count($path);
                 foreach($path as $p){
-                    //$_map[$p->y][$p->x] = $p->cost;
                     $_map[$p->y][$p->x] = $index--;
                 }
                 echo "<table><tbody>";
@@ -342,8 +342,7 @@
 
         $bfs = new DFS();
         $bfs->Run(new point(intval($Data['Config']['Attitude']['Code']['4']), intval($Data['Config']['Attitude']['Code']['1']), compareDFSYaw(absAngle($Data['Config']['Attitude']['Yaw'])/90), 0));
-        //$bfs->ShowView();
-        $bfs->BuildPath($bfs->map_index[6][5]);
+        $bfs->BuildPath($bfs->map_index[5][5]);
 
         $time += microtime(true);
 
