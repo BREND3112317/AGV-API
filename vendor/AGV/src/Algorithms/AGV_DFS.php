@@ -192,12 +192,13 @@ class AGV_DFS{
         $paths = array();
         foreach($this->map_index as $code => $p){
             $path = array();
+            $p=$p->parent;
             while($p != null){
                 //echo '(' . $x->x . ', ' . $x->y . ') -> ';
                 array_push($path, '0'.$p->y.'00'.$p->x.'0');
                 $p = $p->parent;
             }
-            array_push($paths, [$code => $path]);
+            $paths[$code] = $path;
         }
         return $paths;
     }

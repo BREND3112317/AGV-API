@@ -8,7 +8,7 @@ use BREND\Constants\API_Code;
 use BREND\AGV\Models\AGV_request;
 use BREND\AGV\Models\AGV_response;
 use BREND\AGV\Models\AGV;
-use BREND\AGV\Algorithms\DFS;
+use BREND\AGV\Algorithms\AGV_DFS;
 use BREND\AGV\Algorithms\point;
 use BREND\AGV\Exceptions\AGVException;
 
@@ -74,7 +74,9 @@ class AGVController{
     public function getData($code = API_Code::ALL){
         switch($code){
             case API_Code::ALL:
-                return $this->AGV->getData()->toArray();
+                $Data = $this->AGV->getData()->toArray();
+                //$Data['Preview'] = $this->getPreviewPath();
+                return $Data;
                 break;
             case API_Code::BATTERY:
                 return $this->AGV->getBattery()->toArray();
@@ -88,6 +90,9 @@ class AGVController{
             case API_Code::POS:
                 return $this->AGV->getMapPosition()->toArray();
                 break; 
+            case API_Code::PreviewPath:
+                return $this->getPreviewPath();
+                break; 
         }
     }
 
@@ -95,12 +100,20 @@ class AGVController{
         
     }
 
+    public function getPreviewPath(){
+        $Data = $this->AGV->getData()->getConfig();
+        $dfs = new AGV_DFS();
+        $dfs->setStartPoint($Data['Attitude']['Code'], $Data['Attitude']['Yaw']);
+        $dfs->Run();
+        $paths = $dfs->getAGVPreviewPath();
+        return $paths;
+    }
+
     public function GoPosition($x, $y, $yaw){
         $Data = $this->AGV->getData()->getConfig();
-        //return $Data;
-        $dfs = new DFS();
-        // return [intval($Data['Attitude']['Code']['4']), intval($Data['Attitude']['Code']['1']), $this->absAngle($Data['Attitude']['Yaw'])/90];
-        $dfs->Run(new point(intval($Data['Attitude']['Code']['4']), intval($Data['Attitude']['Code']['1']), $this->compareDFSYaw($this->absAngle($Data['Attitude']['Yaw'])/90), 0));
+        $dfs = new AGV_DFS();
+        $dfs->setStartPoint($Data['Attitude']['Code'], $Data['Attitude']['Yaw']);
+        $dfs->Run();
         $path = $dfs->getPath($x, $y);
         $script = $path->script;
         return $script;
