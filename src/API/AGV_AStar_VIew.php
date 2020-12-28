@@ -258,7 +258,6 @@
                                 $p->addScript('10100');
                             }
                         }
-                        
                     }
                     $this->map_index[$y][$x] = $p;
                     //$this->ShowView();

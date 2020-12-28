@@ -72,6 +72,23 @@ class AGV_DFS{
                 break;
         }
     }
+
+    public function compareAGVYaw($yaw){
+        switch($yaw){
+            case 1:
+                return 0;
+                break;
+            case 0:
+                return 90;
+                break;
+            case 3:
+                return 180;
+                break;
+            case 2:
+                return 270;
+                break;
+        }
+    }
     
     public function calYaw($x, $y, $p){
         /* * * * *
@@ -139,10 +156,10 @@ class AGV_DFS{
             if(abs($cost_index) == 2){//迴轉(左回)
                 $p->addScript('180');
                 $p->addScript('10100');
-            }else if($cost_index > 0 || $cost_index == -3){//右轉
+            }else if((($cost_index > 0) && ($cost_index != 3)) || ($cost_index == -3)){//右轉
                 $p->addScript('150');
                 $p->addScript('10100');
-            }else if($cost_index < 0 || $cost_index == 3){//左轉
+            }else if((($cost_index < 0) && ($cost_index != -3)) || $cost_index == 3){//左轉
                 $p->addScript('170');
                 $p->addScript('10100');
             }else{
@@ -181,7 +198,14 @@ class AGV_DFS{
         return null;
     }
 
-    public function getPath($code){
+    public function getPath($x, $y){
+        if(isset($this->map_index['0'.$x.'00'.$y.'0'])){
+            return $this->map_index['0'.$x.'00'.$y.'0'];
+        }
+        return null;
+    }
+
+    public function getCodePath($code){
         if(isset($this->map_index[$code])){
             return $this->map_index[$code];
         }

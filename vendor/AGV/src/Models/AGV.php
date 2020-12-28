@@ -25,6 +25,13 @@ class AGV{
         return $this->_Data;
     }
 
+    public function checkError(){
+        if(($statusCode = $this->_Data->getStatusCode()) !== AGVSTATUS::SUCCESS){
+            throw new AGVException($this->_Data->getConfig(), $statusCode);
+        }
+        return false;
+    }
+
     public function getPrepareData(){
         /*
             Battery string  電池電量
@@ -45,13 +52,6 @@ class AGV{
         $prepareData['Attitude']['Yaw'] = $data['Config']['Attitude']['Yaw'];
         $prepareData['Shelves']['Yaw'] = $data['Config']['Shelves']['Yaw'];
         return $prepareData;
-    }
-
-    public function checkError(){
-        if(($statusCode = $this->_Data->getStatusCode()) !== AGVSTATUS::SUCCESS){
-            throw new AGVException($this->_Data->getConfig(), $statusCode);
-        }
-        return false;
     }
 
     public function getBattery(){
@@ -183,9 +183,35 @@ class AGV{
         return $this->_Data;
     }
 
-    public function spin($degree, $lockingDisc = true){ // 旋轉 : lockingDisc鎖定圓盤不動
-        throw Exception(__FUNCTION__ . "is unactive.");
+    public function Trans2AbsYawSpin($yaw, $lockingDisc = true){
+        $this->getData();
+        $attitude = $this->_Data->getAttitude();
+        // $attitude['Yaw'] = 270;
+        $_yaw = $this->REGAngle($yaw-$attitude['Yaw']);
+        if($_yaw>0){//右轉
+            echo "右轉: " . $_yaw;
+            return $this->spinRight($_yaw, $lockingDisc);
+        }else if($_yaw<0){//左轉
+            echo "左轉: " . $_yaw;
+            return $this->spinLeft($_yaw, $lockingDisc);
+        }
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
     }
+
+    public function quickSpin($degree, $lockingDisc = true){ // 旋轉 : lockingDisc鎖定圓盤不動
+        $_yaw = $this->REGAngle($degree);
+        if($_yaw>0){//右轉
+            echo "右轉: " . $_yaw;
+            return $this->spinRight($_yaw, $lockingDisc);
+        }else if($_yaw<0){//左轉
+            echo "左轉: " . $_yaw;
+            return $this->spinLeft($_yaw, $lockingDisc);
+        }
+        return $this->getData();
+    }
+
     public function spinLeft($spin, $lockingDisc = true){
         switch($this->absAngle($spin)/90){
             case 1:
@@ -199,9 +225,7 @@ class AGV{
                 $httpResponse = AGV_request::POST($this->AGV_name, $lockingDisc ? "30210" : "30110", array(), $this->api_url);
                 break;
         }
-        $this->_Data = new AGV_response($httpResponse);
-        $this->checkError();
-        return $this->_Data;
+        return $this->getData();
     }
 
     public function spinRight($spin, $lockingDisc = true){
@@ -222,11 +246,19 @@ class AGV{
         return $this->_Data;
     }
 
+    public function REGAngle($angle){
+        while($angle<-180)$angle+=360;
+        while($angle>180)$angle-=360;
+        $angle = round($angle/90)*90;
+        return $angle;
+    }
+
     private function absAngle($angle){
         while($angle<0)$angle+=360;
         $angle = round($angle/90)*90;
         return $angle%360;
     }
+
     public function checkYaw($yaw){
         $this->getData();
         $Attitude = $this->_Data->getAttitude();
