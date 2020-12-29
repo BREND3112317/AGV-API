@@ -130,6 +130,20 @@ class AGV{
         return $this->_Data;
     }
 
+    public function ServoOn(){
+        $httpResponse = AGV_request::POST($this->AGV_name, "30100", array(), $this->api_url);
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
+    }
+
+    public function ServoOff(){
+        $httpResponse = AGV_request::POST($this->AGV_name, "30101", array(), $this->api_url);
+        $this->_Data = new AGV_response($httpResponse);
+        $this->checkError();
+        return $this->_Data;
+    }
+
     public function move($gap){
         $httpResponse = AGV_request::POST($this->AGV_name, "30112", array($gap), $this->api_url);
         $this->_Data = new AGV_response($httpResponse);

@@ -24,9 +24,8 @@ use BREND\AGV\Controllers\AGVController;
 // var_dump(AGV_request::POST("ITRI_3-3", "500", array(), "http://59.124.226.9:6592/AGV/SendAgvCmd"));
 // var_dump(AGV_request::POST("testName", "500", array(), "testUrl"));
 
-
-// $AGV = new AGV("ITRI_3-1", "http://192.168.101.234:50100/AGV/SendAgvCmd");
-$AGV = new AGV("ITRI_3-4");
+$AGV = new AGV("ITRI_3-4", "http://59.124.226.9:6592/AGV/SendAgvCmd");
+// $AGV = new AGV("ITRI_3-4");
 
 $jsonOut = [
     'code' => STATUS::SUCCESS, 

@@ -47,6 +47,12 @@ class AGVController{
             case API_Code::SCRIPTSTOP:
                 return $this->AGV->ScriptSTOP();
                 break;
+            case API_Code::ServoOn:
+                return $this->AGV->ServoOn();
+                break;
+            case API_Code::ServoOff:
+                return $this->AGV->ServoOff();
+                break;
             case API_Code::RUN1000:
                 $this->DoNotInPluging();
                 return $this->AGV->move(1000);
@@ -83,6 +89,9 @@ class AGVController{
                 break;
             case API_Code::DoScript:
                 return $this->GoPosition($param['code'], $param['yaw']);
+                break;
+            case API_Code::GoChargeing:
+                return $this->GoChargeing();
                 break;
             // case API_Code::TURNRIGHT:
             //     return $this->AGV->spinRight(90);
@@ -140,9 +149,10 @@ class AGVController{
         $dfs->setStartPoint($Data['Attitude']['Code'], $Data['Attitude']['Yaw']);
         $dfs->Run();
         $path = $dfs->getCodePath($code);
+        // $dfs->showPreviewPath($code);
         $script = $path->script;
-        return $script;
-        // return $this->DoScript($script);
+        // return $path;
+        return $this->DoScript($script);
     }
 
     public function GoChargeing(){
@@ -156,17 +166,17 @@ class AGVController{
 
         $dfs->Run();
         $path = $dfs->getCodePath("060050");
-        var_dump($path);
+        //var_dump($path);
         $scripts = $path->script;
         // echo $this->translateScript(30230, 700);
-        $scripts = $this->pushScript($this->translateScript($this->REGTurnCmd($dfs->compareAGVYaw($path->yaw), 90)), $scripts);
-        $scripts = $this->pushScript($this->translateScript(30230, 700), $scripts);
-        return $scripts;
-        // return $this->DoScript($scripts);
+        $this->pushScript($this->translateScript($this->REGTurnCmd($dfs->compareAGVYaw($path->yaw), 90)), $scripts);
+        $this->pushScript($this->translateScript(30230, 700), $scripts);
+        // return $scripts;
+        return $this->DoScript($scripts);
     }
 
-    public function pushScript($script, $scripts = array()){
-        echo $script;
+    public function pushScript($script, &$scripts = array()){
+        // echo $script;
         if($script != null){
             array_push($scripts, $script);
         }

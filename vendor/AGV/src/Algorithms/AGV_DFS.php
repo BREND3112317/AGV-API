@@ -198,9 +198,18 @@ class AGV_DFS{
         return null;
     }
 
+    public function showPreviewPath($code){
+        $path = $this->getCodePath($code);
+        while($path != null){
+            echo "0" . $path->y . "00" . $path->x . "0";
+            echo " -> ";
+            $path = $path->parent;
+        }
+    }
+
     public function getPath($x, $y){
-        if(isset($this->map_index['0'.$x.'00'.$y.'0'])){
-            return $this->map_index['0'.$x.'00'.$y.'0'];
+        if(isset($this->map_index['0'.$y.'00'.$x.'0'])){
+            return $this->map_index['0'.$y.'00'.$x.'0'];
         }
         return null;
     }

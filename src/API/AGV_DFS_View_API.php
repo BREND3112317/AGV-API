@@ -77,8 +77,8 @@
             }
         }
 
-        // $AGV = new AGVController("ITRI_3-3", "http://192.168.101.234:50100/AGV/SendAgvCmd");
-        $AGV = new AGVController("ITRI_3-3");
+        $AGV = new AGVController("ITRI_3-3", "http://192.168.101.234:50100/AGV/SendAgvCmd");
+        // $AGV = new AGVController("ITRI_3-3");
 
         $Data = $AGV->getData(1);
 
@@ -338,7 +338,7 @@
 
         $bfs = new DFS();
         $bfs->Run(new point(intval($Data['Config']['Attitude']['Code']['4']), intval($Data['Config']['Attitude']['Code']['1']), compareDFSYaw(absAngle($Data['Config']['Attitude']['Yaw'])/90), 0));
-        $bfs->BuildPath($bfs->map_index[5][5]);
+        $bfs->BuildPath($bfs->map_index[4][3]);
 
         $time += microtime(true);
 

@@ -13,8 +13,8 @@ use BREND\AGV\Algorithms\DFS;
 use BREND\AGV\Algorithms\point;
 use BREND\AGV\Controllers\AGVController;
 
-// $AGV = new AGV("ITRI_3-1", "http://192.168.101.234:50100/AGV/SendAgvCmd");
-$AGV = new AGV("ITRI_3-4");
+$AGV = new AGVController("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
+// $AGV = new AGV("ITRI_3-4");
 
 $jsonOut = [
     'code' => STATUS::SUCCESS, 

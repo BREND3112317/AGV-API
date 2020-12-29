@@ -14,6 +14,8 @@ class API_Code{
     const SCRIPTOVER        = -2;
     const SCRIPTContinue    = -3;
     const SCRIPTSTOP        = -4;
+    const ServoOn           = -5;
+    const ServoOff          = -6;
     const RUN1000           = -10;
     const TURNLEFT          = -11;
     const TURNRIGHT         = -12;
@@ -22,5 +24,7 @@ class API_Code{
     const TURNBACK          = -15;
     const PLUGIN            = -16;
     const PLUGOUT           = -17;
-    const DoScript          = -100;
+    const TURNREG           = -20;
+    const DoScript          = -1000;
+    const GoChargeing       = -1001;
 }

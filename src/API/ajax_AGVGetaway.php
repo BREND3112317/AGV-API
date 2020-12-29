@@ -14,13 +14,13 @@ $Data = json_decode($request->getContent(), true);
 // var_dump($Data);
 // exit();
 
-// $AGV = new AGVController($Data['Name'], "http://192.168.101.234:50100/AGV/SendAgvCmd");
-$AGV = new AGVController($Data['Name']);
+$AGV = new AGVController($Data['Name'], "http://59.124.226.9:6592/AGV/SendAgvCmd");
+// $AGV = new AGVController($Data['Name']);
 
 
 $jsonOut = [
     'code' => STATUS::SUCCESS, 
-    'data' => $AGV->Getaway($Data['Cmd'])
+    'data' => $AGV->Getaway($Data['Cmd'], $Data['Param'])
 ];
 
 $response = new Response();
