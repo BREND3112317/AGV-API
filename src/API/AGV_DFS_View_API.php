@@ -77,8 +77,8 @@
             }
         }
 
-        $AGV = new AGVController("ITRI_3-3", "http://192.168.101.234:50100/AGV/SendAgvCmd");
-        // $AGV = new AGVController("ITRI_3-3");
+        // $AGV = new AGVController("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
+        $AGV = new AGVController("ITRI_3-1");
 
         $Data = $AGV->getData(1);
 
@@ -88,10 +88,6 @@
         // exit();
 
         $time = -microtime(true);
-
-
-
-        define("DEBUG", true);
 
         set_time_limit(1);
         $_map = [   [-1,-2, 0, 0,-1,-1,-1],
@@ -176,6 +172,23 @@
                 }
             }
 
+            public function compareAGVYaw($yaw){
+                switch($yaw){
+                    case 1:
+                        return 0;
+                        break;
+                    case 0:
+                        return 90;
+                        break;
+                    case 3:
+                        return 180;
+                        break;
+                    case 2:
+                        return 270;
+                        break;
+                }
+            }
+
             public function calYaw($x, $y, $p){
                 /* * * * *
                         上
@@ -210,22 +223,24 @@
                 return $this->map[$y][$x] === 0;
             }
 
-            public function setStartPoint($p){ // 設定起點
-                $this->start = new Point($p->x, $p->y, $p->yaw, 0);
+            public function setStartPoint($code, $yaw){ // 設定起點
+                $x = intval($code['4']);
+                $y = intval($code['1']);
+                $yaw = $this->compareDFSYaw($this->absAngle($yaw)/90);
+                $this->start = new Point($x, $y, $yaw, 0);
             }
 
             public function IsStartPoint($x, $y){ // 判斷點是否為起點
                 return $this->start->x == $x && $this->start->y == $y;
             }
 
-            public function Run($start_p){
-                $this->setStartPoint($start_p);
-                $this->map_index[$start_p->y][$start_p->x] = $start_p;
+            public function Run(){
+                $this->map_index['0'.$this->start->y.'00'.$this->start->x.'0'] = $this->start;
 
-                $this->ProcessPoint($start_p->x,    $start_p->y+1,  $start_p);
-                $this->ProcessPoint($start_p->x-1,  $start_p->y,    $start_p);
-                $this->ProcessPoint($start_p->x,    $start_p->y-1,  $start_p);
-                $this->ProcessPoint($start_p->x+1,  $start_p->y,    $start_p);
+                $this->ProcessPoint($this->start->x,    $this->start->y+1,  $this->start);
+                $this->ProcessPoint($this->start->x-1,  $this->start->y,    $this->start);
+                $this->ProcessPoint($this->start->x,    $this->start->y-1,  $this->start);
+                $this->ProcessPoint($this->start->x+1,  $this->start->y,    $this->start);
             }
 
             public function ProcessPoint($x, $y, $parent){
@@ -233,7 +248,7 @@
                 $newYaw = $this->calYaw($x, $y, $parent);
                 $newCost = $parent->cost + $this->estimateCost($parent, $newYaw);
                 
-                if(isset($this->map_index[$y][$x])==false || $this->map_index[$y][$x]->cost > $newCost){
+                if(isset($this->map_index['0'.$y.'00'.$x.'0'])==false || $this->map_index['0'.$y.'00'.$x.'0']->cost > $newCost){
                     $p = new point($x, $y, $newYaw, $newCost, $parent);
                     $p->setScript($parent->script);
                     $cost_index = $parent->yaw - $newYaw;
@@ -260,7 +275,7 @@
                         }
                         
                     }
-                    $this->map_index[$y][$x] = $p;
+                    $this->map_index['0'.$y.'00'.$x.'0'] = $p;
                     //$this->ShowView();
                     $this->ProcessPoint($p->x,      $p->y+1,    $p);
                     $this->ProcessPoint($p->x-1,    $p->y,      $p);
@@ -319,14 +334,14 @@
                             echo '<td class="block">' . $_map[$i][$j] . '</td>';
                         }else if($_map[$i][$j]>0){
                             echo '<td style="background-color: rgba(255, 0, 0, ' . $_map[$i][$j]/(count($path)+1) . ');">';
-                            if(isset($this->map_index[$i][$j])){
-                                echo $this->map_index[$i][$j]->cost; 
+                            if(isset($this->map_index['0'.$i.'00'.$j.'0'])){
+                                echo $this->map_index['0'.$i.'00'.$j.'0']->cost; 
                             }else{
                                 echo $_map[$i][$j];
                             }
                             echo '</td>';
-                        }else if(isset($this->map_index[$i][$j])){
-                            echo '<td>' . $this->map_index[$i][$j]->cost . '</td>';                            
+                        }else if(isset($this->map_index['0'.$i.'00'.$j.'0'])){
+                            echo '<td>' . $this->map_index['0'.$i.'00'.$j.'0']->cost . '</td>';                            
                         }else{
                             echo '<td>' . $_map[$i][$j] . '</td>';
                         }
@@ -334,11 +349,27 @@
                     echo '</tr>';
                 }
             }
+
+            public function getCodePath($code){
+                if(isset($this->map_index[$code])){
+                    return $this->map_index[$code];
+                }
+                return null;
+            }
         }
 
         $bfs = new DFS();
-        $bfs->Run(new point(intval($Data['Config']['Attitude']['Code']['4']), intval($Data['Config']['Attitude']['Code']['1']), compareDFSYaw(absAngle($Data['Config']['Attitude']['Yaw'])/90), 0));
-        $bfs->BuildPath($bfs->map_index[4][3]);
+        // $bfs->setStartPoint("060030", 0);
+        $bfs->setStartPoint($Data['Config']['Attitude']['Code'], $Data['Config']['Attitude']['Yaw']);
+        // $bfs->Run(new point(intval($Data['Config']['Attitude']['Code']['4']), intval($Data['Config']['Attitude']['Code']['1']), compareDFSYaw(absAngle($Data['Config']['Attitude']['Yaw'])/90), 0));
+        $bfs->Run();
+        $path = $bfs->getCodePath("040010");
+        $_p = $path;
+        while($_p != null){
+            var_dump($_p->script);
+            $_p = $_p->parent;
+        }
+        $bfs->BuildPath($path);
 
         $time += microtime(true);
 

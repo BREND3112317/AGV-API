@@ -82,10 +82,11 @@ class AGVController{
                 return $this->AGV->shelfdown();
                 break;
             case API_Code::PLUGIN:
-                return $this->AGV->PlugIn();
+                $this->DoNotInPluging();
+                return $this->GoChargeing();
                 break;
             case API_Code::PLUGOUT:
-                return $this->AGV->PlugOut();
+                return $this->DoNotInPluging();
                 break;
             case API_Code::DoScript:
                 return $this->GoPosition($param['code'], $param['yaw']);
@@ -156,10 +157,8 @@ class AGVController{
     }
 
     public function GoChargeing(){
+        $this->DoNotInPluging();
         $Data = $this->AGV->getData()->getConfig();
-        if($Data['Status']['IsChargeing']){
-            return null;
-        }
         $dfs = new AGV_DFS($this->map);
         $dfs->setStartPoint($Data['Attitude']['Code'], $Data['Attitude']['Yaw']);
         // $dfs->setStartPoint("030050", 180);
@@ -192,7 +191,8 @@ class AGVController{
             $Data = $this->AGV->getData()->getStatus();
         }
         if($Data['IsChargeing'] == true){
-            $this->Getaway(API_Code::PLUGOUT);
+            // return false;
+            $this->AGV->PlugOut();
         }
     }
 

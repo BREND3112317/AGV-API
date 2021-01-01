@@ -13,12 +13,12 @@ use BREND\AGV\Algorithms\DFS;
 use BREND\AGV\Algorithms\point;
 use BREND\AGV\Controllers\AGVController;
 
-$AGV = new AGVController("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
-// $AGV = new AGV("ITRI_3-4");
+// $AGV = new AGV("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
+$AGV = new AGV("ITRI_3-1");
 
 $jsonOut = [
     'code' => STATUS::SUCCESS, 
-    'data' => $AGV->Trans2AbsYaw(90)
+    'data' => $AGV->checkIsChargeing()
 ];
 
 var_dump($jsonOut['data']);

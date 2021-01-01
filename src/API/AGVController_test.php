@@ -13,10 +13,10 @@ use BREND\AGV\Algorithms\DFS;
 use BREND\AGV\Algorithms\point;
 use BREND\AGV\Controllers\AGVController;
 
-throw new Exception("test");
+// throw new Exception("test");
 
-$AGV = new AGVController("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
-// $AGV = new AGVController("ITRI_3-3");
+// $AGV = new AGVController("ITRI_3-3", "http://59.124.226.9:6592/AGV/SendAgvCmd");
+$AGV = new AGVController("ITRI_3-1");
 
 //var_dump($AGV1->getStatus()->toArray());
 
