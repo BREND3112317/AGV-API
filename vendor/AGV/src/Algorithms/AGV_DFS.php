@@ -32,12 +32,12 @@ class AGV_DFS{
     public $charges = ['movestart' => 4.24, 'movecontinue' => 2.64, 'tra90' => 4.41, 'tra180' => 4.80];
 
     public $map = [ [-1,-2, 0, 0,-1,-1,-1],
-                    [-1,-1, 0, 0, 0,-2,-2],
-                    [-1,-1, 0, 0, 0,-2,-2],
-                    [-1,-1, 0, 0, 0, 0,-2],
-                    [-1, 0, 0, 0, 0, 0,-2],
-                    [-1, 0, 0, 0, 0, 0,-1],
-                    [-1, 0, 0, 0, 0, 0,-1],
+                     [-1,-1, 0, 0, 0,-2,-2],
+                     [-1,-1, 0, 0, 0,-2,-2],
+                     [-1,-1, 0, 0, 0, 0,-2],
+                     [-1, 0, 0, -1, 0, 0,-2],
+                     [-1, 0, 0, 0, -1, 0,-1],
+                     [-1, 0, 0, -1, 0, 0,-1],
     ];
 
     public $map_index = array();
@@ -121,7 +121,7 @@ class AGV_DFS{
     public function IsValidPoint($x, $y){ // 判斷點是否有效，不再地圖內或障礙物都是無效的
         if($x < 0 || $y < 0)return false;
         if($x >= count($this->map) || $y >= count($this->map[0]))return false;
-        return $this->map[$y][$x] === 0;
+        return $this->map[$y][$x] >= 0;
     }
 
     public function setStartPoint($code, $yaw){ // 設定起點

@@ -16,13 +16,20 @@ class AGVController{
     protected $api_url;
     protected $AGV_name;
 
-    private $map = [ [-1,-2, 0, 0,-1,-1,-1],
-                     [-1,-1, 0, 0, 0,-2,-2],
-                     [-1,-1, 0, 0, 0,-2,-2],
-                     [-1,-1, 0, 0, 0, 0,-2],
-                     [-1, 0, 0, 0, 0, 0,-2],
-                     [-1, 0, 0, 0, 0, 0,-1],
-                     [-1, 0, 0, 0, 0, 0,-1],
+    //  -1: 預設牆壁
+    //  -2: 不可走動區域
+    //  -3: 充電座牆壁
+    // -10: AGV
+    //   2: 準充電位置
+    //  10: 貨架
+    private $map = [
+        [-1,-2, 0, 0,-1,-1,-1],
+        [-1,-1, 0, 0, 0,-2,-2],
+        [-1,-1, 0, 0, 0,-2,-2],
+        [-1,-1, 0, 0, 0, 0,-2],
+        [-1,10, 0, 0,-2, 0,-2],
+        [-1,10, 0, 0, 0, 0,-1],
+        [-1,10, 0,-2, 0, 2,-3],
     ];
 
     private $AGV;
@@ -105,6 +112,7 @@ class AGVController{
             case API_Code::MAIN:
                 $Data = $this->AGV->getPrepareData();
                 $Data['Priview'] = $this->getPreviewPath();
+                $Data['Map'] = $this->map;
                 return $Data;
                 break;
             case API_Code::ALL:
