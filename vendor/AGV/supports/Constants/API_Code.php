@@ -3,6 +3,7 @@
 namespace BREND\Constants;
 
 class API_Code{
+    const MAIN              = 0;
     const ALL               = 1;
     const BATTERY           = 2;
     const POS               = 3;

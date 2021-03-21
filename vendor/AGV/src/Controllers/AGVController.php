@@ -102,6 +102,11 @@ class AGVController{
 
     public function getData($code = API_Code::ALL){
         switch($code){
+            case API_Code::MAIN:
+                $Data = $this->AGV->getPrepareData();
+                $Data['Priview'] = $this->getPreviewPath();
+                return $Data;
+                break;
             case API_Code::ALL:
                 $Data = $this->AGV->getData()->toArray();
                 //$Data['Preview'] = $this->getPreviewPath();

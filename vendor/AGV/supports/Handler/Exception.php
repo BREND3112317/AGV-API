@@ -3,22 +3,26 @@
 use BREND\Constants\STATUS;
 use Symfony\Component\HttpFoundation\Response;
 
-define("DEBUG", false);
+define("DEBUG", true);
 
 set_exception_handler(function(Throwable $e){
+    http_response_code(500);
+    global $jsonOut;
+    ob_start();
+    var_dump($jsonOut);
+    $testData = ob_get_clean();
     $errorStatus = <<<HTML
     <h1>{$e->getMessage()}</h1>
-    <p>{$e}</p>
+    <p>{$testData}</p>
     <strong>Code: </strong>{$e->getCode()}<br/>
     <strong>File: </strong> <code>{$e->getFile()} ({$e->getLine()})</code>
     <h3>Call Stack</h3>
     <pre>{$e->getTraceAsString()}<pre>
     HTML;
-    if(DEBUG==true){
+    if(DEBUG){
         // //echo get_class($e);
         header('Content-Type: text/html');
         echo $errorStatus;
-        die;
         exit();
     }else{
         // $jsonOut['errorEncode'] = base64url_encode(json_encode($errorStatus));

@@ -45,12 +45,22 @@ class AGV{
             Battery string  電池電量
         */
         $data = $this->getData()->toArray();
-
-        $prepareData['Battery'] = $data['Config']['Battery'];
-        $prepareData['AgvLogIndex']['IsProgress'] = $data['Config']['AgvLogIndex']['IsProgress'];
-        $prepareData['Attitude']['Code'] = $data['Config']['Attitude']['Code'];
-        $prepareData['Attitude']['Yaw'] = $data['Config']['Attitude']['Yaw'];
-        $prepareData['Shelves']['Yaw'] = $data['Config']['Shelves']['Yaw'];
+        $prepareData['StatusCode']          = $data['StatusCode'];
+        $prepareData['Battery']             = $data['Config']['Battery'];
+        $prepareData['Attitude']['Code']    = $data['Config']['Attitude']['Code'];
+        $prepareData['Attitude']['Yaw']     = $data['Config']['Attitude']['Yaw'];
+        $prepareData['Shelves']['Code']     = $data['Config']['Shelves']['Code'];
+        $prepareData['Shelves']['Yaw']      = $data['Config']['Shelves']['Yaw'];
+        $prepareData['AgvLogIndex']['IsProgress']   = $data['Config']['AgvLogIndex']['IsProgress'];
+        $prepareData['AgvLogIndex']['ScriptIdx']    = $data['Config']['AgvLogIndex']['ScriptIdx'];
+        $prepareData['AgvLogIndex']['RunIdx']       = $data['Config']['AgvLogIndex']['RunIdx'];
+        $prepareData['AgvLogIndex']['ErrorIdx']     = $data['Config']['AgvLogIndex']['ErrorIdx'];
+        $prepareData['Status']['State']     = $data['Config']['Status']['State'];
+        $prepareData['Status']['IsLiftUp']  = $data['Config']['Status']['IsLiftUp'];
+        $prepareData['Status']['IsMoving']  = $data['Config']['Status']['IsMoving'];
+        $prepareData['Status']['IsReady']   = $data['Config']['Status']['IsReady'];
+        $prepareData['AgvScript']           = $data['Config']['AgvScript'];
+        
         return $prepareData;
     }
 
