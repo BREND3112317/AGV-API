@@ -8,4 +8,4 @@
 //     throw new ErrorException($msg, STATUS::UNKNOWN_ERROR, $code, $file, $line);
 // }
 
-// set_error_handler("ErrorHandler", E_ALL);
+// set_error_handler("ErrorHandler");

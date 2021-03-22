@@ -27,23 +27,23 @@ set_exception_handler(function(Throwable $e){
     }else{
         // $jsonOut['errorEncode'] = base64url_encode(json_encode($errorStatus));
         
-        $data['statusCode'] = $e->getCode();
-        $data['title'] = $e->getMessage();
-        $data['file']['name'] = $e->getFile();
-        $data['file']['line'] = $e->getLine();
-        $data['callStack'] = $e->getTraceAsString();
-        $jsonOut = [
-            'code' => STATUS::UNKNOWN_ERROR, 
-            'data' => $data
-            // 'data' => base64url_encode(json_encode($errorStatus))
-        ];
+        // $data['statusCode'] = $e->getCode();
+        // $data['title'] = $e->getMessage();
+        // $data['file']['name'] = $e->getFile();
+        // $data['file']['line'] = $e->getLine();
+        // $data['callStack'] = $e->getTraceAsString();
+        // $jsonOut = [
+        //     'code' => STATUS::UNKNOWN_ERROR, 
+        //     'data' => $data
+        //     // 'data' => base64url_encode(json_encode($errorStatus))
+        // ];
 
         
-        $response = new Response();
-        $response->setContent(json_encode($jsonOut));
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-        $response->send();
-        exit();
+        // $response = new Response();
+        // $response->setContent(json_encode($jsonOut));
+        // $response->headers->set('Content-Type', 'application/json');
+        // $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+        // $response->send();
+        // exit();
     }
 });

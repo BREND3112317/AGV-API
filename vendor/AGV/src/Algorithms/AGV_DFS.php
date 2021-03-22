@@ -7,12 +7,16 @@ class point{
     public $cost;
     public $parent;
     public $script = array();
+    public $level=0;
     public function __construct($x, $y, $yaw, $cost = PHP_INT_MAX-1, $parent = null){
         $this->x    = $x;
         $this->y    = $y;
         $this->yaw  = $yaw;
         $this->cost = $cost;
         $this->parent = $parent;
+    }
+    public function setLevel($level) {
+        $this->level = $level;
     }
     public function setScript($script){
         $this->script = $script;
@@ -122,13 +126,15 @@ class AGV_DFS{
         if($x < 0 || $y < 0)return false;
         if($x >= count($this->map) || $y >= count($this->map[0]))return false;
         return $this->map[$y][$x] >= 0;
+        // return $this->start->level > $this->map[$y][$x];
     }
 
-    public function setStartPoint($code, $yaw){ // 設定起點
+    public function setStartPoint($code, $yaw, $level=1){ // 設定起點
         $x = intval($code['4']);
         $y = intval($code['1']);
         $yaw = $this->compareDFSYaw($this->absAngle($yaw)/90);
         $this->start = new Point($x, $y, $yaw, 0);
+        $this->start->setLevel($level);
     }
 
     public function IsStartPoint($x, $y){ // 判斷點是否為起點

@@ -19,17 +19,19 @@ class AGVController{
     //  -1: 預設牆壁
     //  -2: 不可走動區域
     //  -3: 充電座牆壁
-    // -10: AGV
-    //   2: 準充電位置
+    //   9: 準充電位置
     //  10: 貨架
+    //  99: 可行走空間
+    //   0: AGV
+    //  11: 舉著貨架的AGV
     private $map = [
-        [-1,-2, 0, 0,-1,-1,-1],
-        [-1,-1, 0, 0, 0,-2,-2],
-        [-1,-1, 0, 0, 0,-2,-2],
-        [-1,-1, 0, 0, 0, 0,-2],
-        [-1,10, 0, 0,-2, 0,-2],
-        [-1,10, 0, 0, 0, 0,-1],
-        [-1,10, 0,-2, 0, 2,-3],
+        [-1,-2,99,-2,-1,-1,-1],
+        [-1,-1,99,99,-2,-2,-2],
+        [-1,-1,99,99,-2,-2,-2],
+        [-1,-1,10,99,-2,-2,-2],
+        [-1,10,99,99,-2,-2,-2],
+        [-1,10,99,99,99,99,-1],
+        [-1,10,99,99,99,12,-3],
     ];
 
     private $AGV;
@@ -159,6 +161,11 @@ class AGVController{
     public function GoPosition($code, $yaw){
         $this->DoNotInPluging();
         $Data = $this->AGV->getData()->getConfig();
+        // ob_start();
+        // var_dump($Data);
+        // $testData = ob_get_clean();
+        // throw new \Exception($testData);
+        $AGV_level = ($Data["Shelves"]["Code"] == "ERROR" && $Data['Status']['IsLiftUp'] == true ? 11 : 0);
         $dfs = new AGV_DFS($this->map);
         $dfs->setStartPoint($Data['Attitude']['Code'], $Data['Attitude']['Yaw']);
         $dfs->Run();
