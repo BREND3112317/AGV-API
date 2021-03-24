@@ -22,14 +22,15 @@ class AGVController{
     //   9: 準充電位置
     //  10: 貨架
     //  99: 可行走空間
-    //   0: AGV
+    //   1: AGV
+    //  -3: 其他AGV
     //  11: 舉著貨架的AGV
     private $map = [
         [-1,-2,99,-2,-1,-1,-1],
-        [-1,-1,99,99,-2,-2,-2],
-        [-1,-1,99,99,-2,-2,-2],
-        [-1,-1,10,99,-2,-2,-2],
-        [-1,10,99,99,-2,-2,-2],
+        [-1,-1,99,99,99,99,-2],
+        [-1,-1,99,99,-2,99,-2],
+        [-1,-1,10,99,-2,99,-2],
+        [-1,10,99,99,-2,99,-2],
         [-1,10,99,99,99,99,-1],
         [-1,10,99,99,99,12,-3],
     ];
@@ -109,12 +110,19 @@ class AGVController{
         }
     }
 
-    public function getData($code = API_Code::ALL){
+    public function getData($code = API_Code::ALL, $param = array()){
         switch($code){
             case API_Code::MAIN:
                 $Data = $this->AGV->getPrepareData();
                 $Data['Priview'] = $this->getPreviewPath();
                 $Data['Map'] = $this->map;
+                $Data['Script'] = array();
+                $scripts = $this->getChargeingScript();
+                foreach($scripts as $script) {
+                    $code = array();
+                    $code['Code'] = $script;
+                    array_push($Data['Script'], $code);
+                }
                 return $Data;
                 break;
             case API_Code::ALL:
@@ -138,7 +146,17 @@ class AGVController{
                 return $this->getPreviewPath();
                 break; 
             case API_Code::PathScript:
-                return $this->getPreviewPath();
+                $Data = $this->AGV->getPrepareData();
+                $Data['Priview'] = $this->getPreviewPath();
+                $Data['Map'] = $this->map;
+                $Data['Script'] = array();
+                $scripts = $this->getGoPositionScript($param['code'], $param['yaw']);
+                foreach($scripts as $script) {
+                    $code = array();
+                    $code['Code'] = $script;
+                    array_push($Data['Script'], $code);
+                }
+                return $Data;
                 break; 
         }
     }
@@ -158,7 +176,7 @@ class AGVController{
         return $paths;
     }
 
-    public function GoPosition($code, $yaw){
+    public function getGoPositionScript($code, $yaw) {
         $this->DoNotInPluging();
         $Data = $this->AGV->getData()->getConfig();
         // ob_start();
@@ -171,12 +189,15 @@ class AGVController{
         $dfs->Run();
         $path = $dfs->getCodePath($code);
         // $dfs->showPreviewPath($code);
-        $script = $path->script;
-        // return $path;
+        return $path->script;
+    }
+
+    public function GoPosition($code, $yaw){
+        $script = $this->getGoPositionScript($code, $yaw);
         return $this->DoScript($script);
     }
 
-    public function GoChargeing(){
+    public function getChargeingScript() {
         $this->DoNotInPluging();
         $Data = $this->AGV->getData()->getConfig();
         $dfs = new AGV_DFS($this->map);
@@ -190,8 +211,12 @@ class AGVController{
         // echo $this->translateScript(30230, 700);
         $this->pushScript($this->translateScript($this->REGTurnCmd($dfs->compareAGVYaw($path->yaw), 90)), $scripts);
         $this->pushScript($this->translateScript(30230, 700), $scripts);
-        // return $scripts;
-        return $this->DoScript($scripts);
+        return $scripts;
+    }
+
+    public function GoChargeing(){
+        $script = $this->getChargeingScript();
+        return $this->DoScript($script);
     }
 
     public function pushScript($script, &$scripts = array()){
