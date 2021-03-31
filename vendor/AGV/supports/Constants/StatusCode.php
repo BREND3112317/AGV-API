@@ -12,6 +12,7 @@ class STATUS{
     const RESPONSE_ERROR        = -100;
     const JSON_NO_REQUIRED_DATA = -200;
     const JSON_FORMAT_ERROR     = -201;
+    const CHECKPOSITION_FALSE   = -300;
 
     const statusTexts  = array(
         0   => "正常",

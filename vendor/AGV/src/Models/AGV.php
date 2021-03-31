@@ -49,17 +49,21 @@ class AGV{
         $prepareData['Battery']             = $data['Config']['Battery'];
         $prepareData['Attitude']['Code']    = $data['Config']['Attitude']['Code'];
         $prepareData['Attitude']['Yaw']     = $data['Config']['Attitude']['Yaw'];
-        $prepareData['Shelves']['Code']     = $data['Config']['Shelves']['Code'];
-        $prepareData['Shelves']['Yaw']      = $data['Config']['Shelves']['Yaw'];
+        $prepareData['Shelves']     = $data['Config']['Shelves'];
+
+        // $prepareData['Shelves']['Code']     = $data['Config']['Shelves']['Code'];
+        // $prepareData['Shelves']['Yaw']      = $data['Config']['Shelves']['Yaw'];
         $prepareData['AgvLogIndex']['IsProgress']   = $data['Config']['AgvLogIndex']['IsProgress'];
         $prepareData['AgvLogIndex']['ScriptIdx']    = $data['Config']['AgvLogIndex']['ScriptIdx'];
         $prepareData['AgvLogIndex']['RunIdx']       = $data['Config']['AgvLogIndex']['RunIdx'];
         $prepareData['AgvLogIndex']['ErrorIdx']     = $data['Config']['AgvLogIndex']['ErrorIdx'];
-        $prepareData['Status']['State']     = $data['Config']['Status']['State'];
-        $prepareData['Status']['IsLiftUp']  = $data['Config']['Status']['IsLiftUp'];
-        $prepareData['Status']['IsMoving']  = $data['Config']['Status']['IsMoving'];
-        $prepareData['Status']['IsReady']   = $data['Config']['Status']['IsReady'];
+        $prepareData['Status']['State']         = $data['Config']['Status']['State'];
+        $prepareData['Status']['IsLiftUp']      = $data['Config']['Status']['IsLiftUp'];
+        $prepareData['Status']['IsMoving']      = $data['Config']['Status']['IsMoving'];
+        $prepareData['Status']['IsReady']       = $data['Config']['Status']['IsReady'];
+        $prepareData['Status']['IsChargeing']   = $data['Config']['Status']['IsChargeing'];
         $prepareData['AgvScript']           = $data['Config']['AgvScript'];
+
         
         return $prepareData;
     }
@@ -162,7 +166,12 @@ class AGV{
     }
 
     public function shelfup(){
-        if($this->checkIsLeftUp()){
+        if(($isLefuUp = $this->checkIsLeftUp()) == true){
+            // ob_start();
+            // var_dump($isLefuUp);
+            // $testData = ob_get_clean();
+            // throw new \Exception($testData);
+            throw new \Exception("Is Shelf Up");
             return $this->getData();
         }
         $httpResponse = AGV_request::POST($this->AGV_name, "30218", array(), $this->api_url);
@@ -172,7 +181,11 @@ class AGV{
     }
 
     public function shelfdown(){
-        if($this->checkIsLeftUp() == false){
+        if(($isLefuUp = $this->checkIsLeftUp()) == false){
+            // ob_start();
+            // var_dump($isLefuUp);
+            // $testData = ob_get_clean();
+            throw new \Exception("Is Shelf Down");
             return $this->getData();
         }
         $httpResponse = AGV_request::POST($this->AGV_name, "30219", array(), $this->api_url);
@@ -304,6 +317,7 @@ class AGV{
     public function checkIsLeftUp(){
         $this->getData();
         $status = $this->_Data->getStatus();
-        return $status['IsLiftUp'];
+        
+        return $status['IsLiftUp'] == true;
     }
 }

@@ -26,11 +26,11 @@ class AGVController{
     //  -3: 其他AGV
     //  11: 舉著貨架的AGV
     private $map = [
-        [-1,-2,99,-2,-1,-1,-1],
-        [-1,-1,99,99,99,99,-2],
-        [-1,-1,99,99,-2,99,-2],
-        [-1,-1,10,99,-2,99,-2],
-        [-1,10,99,99,-2,99,-2],
+        [-1,-2,99,99,-1,-1,-1],
+        [-1,-1,99,99,99,99,99],
+        [-1,-1,99,99,99,99,99],
+        [-1,-1,10,99,99,99,99],
+        [-1,10,99,99,99,99,99],
         [-1,10,99,99,99,99,-1],
         [-1,10,99,99,99,12,-3],
     ];
@@ -99,6 +99,7 @@ class AGVController{
                 return $this->DoNotInPluging();
                 break;
             case API_Code::DoScript:
+                $this->checkPosition($param['AGV_Code']);
                 return $this->GoPosition($param['code'], $param['yaw']);
                 break;
             case API_Code::GoChargeing:
@@ -164,7 +165,26 @@ class AGVController{
     
 
     public function setMap($map){
+        
+    }
 
+    public function checkPosition($code) {
+        $Data = $this->AGV->getData()->getAttitude();
+        if($code != $Data['Code']){
+            throw new \Exception("Check Position: false", STATUS::CHECKPOSITION_FALSE);
+        }else {
+            // throw new \Exception("Check Position: true", STATUS::CHECKPOSITION_FALSE);
+
+        }
+        // exit();
+        // ob_start();
+        // echo "code: ";
+        // var_dump($code);
+        // echo '<br />';
+        // echo "Data: ";
+        // var_dump($Data);
+        // $testData = ob_get_clean();
+        // throw new \Exception($testData);
     }
 
     public function getPreviewPath(){
@@ -232,10 +252,17 @@ class AGVController{
     }
 
     public function DoNotInPluging($Data = null){
+        $Data = $this->AGV->getData()->getStatus();
         if($Data == null){
-            $Data = $this->AGV->getData()->getStatus();
+            
         }
+        // ob_start();
+        // var_dump($Data);
+        // var_dump($Data['IsChargeing']);
+        // $testData = ob_get_clean();
+        // throw new \Exception($testData);
         if($Data['IsChargeing'] == true){
+            // throw new \Exception($Data['IsChargeing']);
             // return false;
             $this->AGV->PlugOut();
         }

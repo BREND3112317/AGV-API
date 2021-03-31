@@ -15,8 +15,8 @@ $jsonOut = $Data;
 // throw new Exception("test");
 // exit();
 
-$AGV = new AGVController($Data['Name'], "http://59.124.226.9:6592/AGV/SendAgvCmd");
-// $AGV = new AGVController($Data['Name']);
+// $AGV = new AGVController($Data['Name'], "http://59.124.226.9:6592/AGV/SendAgvCmd");
+$AGV = new AGVController($Data['Name']);
 
 // ob_start();
 // var_dump($Data);
